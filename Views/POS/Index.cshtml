@@ -1,0 +1,75 @@
+﻿<h2 class="mb-4">🧾 Modo Cajero</h2>
+
+<input type="text" id="buscador" class="form-control mb-3"
+       placeholder="Escanea o escribe producto..." autofocus />
+
+<div id="resultados" class="row"></div>
+
+<h3 class="mt-4">💰 Total: $<span id="total">0</span></h3>
+
+<script>
+    let total = 0;
+    let carrito = [];
+
+    document.getElementById("buscador").addEventListener("keyup", function () {
+        let valor = this.value;
+
+        if (valor.length < 1) return;
+
+        fetch(`/POS/Buscar?term=${valor}`)
+            .then(res => res.json())
+            .then(data => {
+                let html = "";
+
+                data.forEach(p => {
+                    html += `
+                        <div class="col-md-4 mb-3">
+                            <div class="card p-2 producto-card">
+                                <h5>${p.name}</h5>
+                                <p>$${p.price}</p>
+                                <button onclick="agregarProducto('${p.name}', ${p.price})"
+                                        class="btn btn-success">
+                                    Agregar
+                                </button>
+                            </div>
+                        </div>
+                    `;
+                });
+
+                document.getElementById("resultados").innerHTML = html;
+            });
+    });
+
+    function agregarProducto(nombre, precio) {
+        carrito.push({ nombre, precio });
+
+        total += precio;
+        document.getElementById("total").innerText = total;
+
+        renderCarrito();
+
+        animacionAgregar();
+    }
+
+    function renderCarrito() {
+        let html = "";
+
+        carrito.forEach(p => {
+            html += `<p>🛒 ${p.nombre} - $${p.precio}</p>`;
+        });
+
+        document.getElementById("listaCarrito").innerHTML = html;
+    }
+
+    function animacionAgregar() {
+        let totalBox = document.getElementById("total");
+
+        totalBox.style.transform = "scale(1.3)";
+        totalBox.style.color = "green";
+
+        setTimeout(() => {
+            totalBox.style.transform = "scale(1)";
+            totalBox.style.color = "black";
+        }, 200);
+    }
+</script>

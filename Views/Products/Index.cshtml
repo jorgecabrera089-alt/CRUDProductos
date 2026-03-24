@@ -1,25 +1,77 @@
 ﻿@model IEnumerable<CRUDProductos.Models.Product>
-
-<h2>Productos</h2>
-
-<a asp-action="Create">Crear nuevo producto</a>
-
-<table border="1">
-    <tr>
-        <th>Nombre</th>
-        <th>Precio</th>
-        <th></th>
-    </tr>
-
-    @foreach (var item in Model)
-    {
-        <tr>
-            <td>@item.Name</td>
-            <td>@item.Price</td>
-            <td>
-                <a asp-action="Delete" asp-route-id="@item.ProductId">Eliminar</a>
-            </td>
-        </tr>
+<input type="text" id="searchBox" class="form-control mb-4"
+       placeholder="🔍 Buscar producto por nombre..." />
+<script>
+    function agregarAlCarrito(id, boton) {
+        fetch(`/Cart/Add/${id}`)
+            .then(() => {
+                actualizarContador();
+            });
     }
 
-</table>
+    function actualizarContador() {
+        let contador = document.getElementById("contadorCarrito");
+
+        let valor = parseInt(contador.innerText) || 0;
+
+        contador.innerText = valor + 1;
+    }
+</script>
+
+<script>
+    document.addEventListener("DOMContentLoaded", function () {
+
+        document.getElementById("searchBox").addEventListener("keyup", function () {
+            let filter = this.value.toLowerCase();
+            let cards = document.querySelectorAll(".product-card");
+
+            cards.forEach(card => {
+                let name = card.querySelector(".product-name").innerText.toLowerCase();
+
+                if (name.includes(filter)) {
+                    card.style.display = "block";
+                } else {
+                    card.style.display = "none";
+                }
+            });
+        });
+
+    });
+</script>
+
+@{
+    ViewData["Title"] = "Productos";
+}
+
+<h1 class="text-center mb-4">🛒 Productos</h1>
+
+<a asp-action="Create" class="btn btn-success mb-4">+ Agregar Producto</a>
+
+<div class="row">
+    @foreach (var item in Model)
+    {
+        <div class="col-md-4 mb-4 product-card">
+            <div class="card shadow-lg">
+
+                <img src="@item.ImageUrl" class="card-img-top" style="height:200px; object-fit:cover;" />
+
+                <div class="card-body text-dark">
+                    <h5 class="product-name">@item.Name</h5>
+
+                    <p>@item.Description</p>
+
+                    <p><strong>$@item.Price</strong></p>
+
+                    <a asp-action="Details" asp-route-id="@item.ProductId" class="btn btn-primary btn-sm">
+                        Ver más
+                    </a>
+
+                    <button onclick="agregarAlCarrito(@item.ProductId, this)" class="btn btn-success btn-sm">
+                        🛒 Agregar
+                    </button>
+                </div>
+
+            </div>
+        </div>
+    }
+</div>

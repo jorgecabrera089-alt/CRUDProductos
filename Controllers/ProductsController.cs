@@ -36,6 +36,28 @@ namespace CRUDProductos.Controllers
             return View(product);
         }
 
+        public IActionResult Edit(int id)
+        {
+            var producto = _context.Products.Find(id);
+            if (producto == null) return NotFound();
+
+            return View(producto);
+        }
+
+       
+        [HttpPost]
+        public IActionResult Edit(Product product)
+        {
+            if (ModelState.IsValid)
+            {
+                _context.Products.Update(product);
+                _context.SaveChanges();
+                return RedirectToAction("Index");
+            }
+
+            return View(product);
+        }
+
         public IActionResult Delete(int id)
         {
             var producto = _context.Products.Find(id);
@@ -45,6 +67,14 @@ namespace CRUDProductos.Controllers
             _context.SaveChanges();
 
             return RedirectToAction("Index");
+        }
+
+        public IActionResult Details(int id)
+        {
+            var producto = _context.Products.Find(id);
+            if (producto == null) return NotFound();
+
+            return View(producto);
         }
     }
 }
