@@ -1,0 +1,32 @@
+﻿@{
+    ViewData["Title"] = "Pago";
+}
+
+<h2>💳 Pago</h2>
+
+<form method="post">
+
+    <input type="text" name="nombre" placeholder="Nombre" class="form-control mb-2" required />
+
+    <input type="text" name="telefono" placeholder="Teléfono" class="form-control mb-2" required />
+
+    <input type="text" name="direccion" placeholder="Dirección" class="form-control mb-2" required />"
+ 
+    <select name="metodo" class="form-control mb-2" required>
+        <option value="">Seleccione método</option>
+        <option value="Nequi">Nequi</option>
+        <option value="Bancolombia">Bancolombia</option>
+    </select>
+
+    <button type="submit" class="btn btn-success">
+        💰 Pagar
+    </button>
+
+</form>
+
+@if (ViewBag.Mensaje != null)
+{
+    <div class="alert alert-success mt-3">
+        @ViewBag.Mensaje
+    </div>
+}

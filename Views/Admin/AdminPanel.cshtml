@@ -1,0 +1,79 @@
+@{
+    ViewData["Title"] = "Admin";
+}
+
+<h2 class="text-center mb-4">⚙️ Panel de Administración</h2>
+
+<div class="row">
+
+    <!-- PRODUCTOS -->
+    <div class="col-md-3">
+        <div class="card p-3 text-center shadow">
+            <h5>📦 Productos</h5>
+            <a asp-controller="Products" asp-action="Index" class="btn btn-dark mt-2">
+                Entrar
+            </a>
+        </div>
+    </div>
+
+    <!-- PROVEEDORES -->
+    <div class="col-md-3">
+        <div class="card p-3 text-center shadow">
+            <h5>🏢 Proveedores</h5>
+            <a asp-controller="Suppliers" asp-action="Index" class="btn btn-primary mt-2">
+                Entrar
+            </a>
+        </div>
+    </div>
+
+    <!-- DESCUENTOS -->
+    <div class="col-md-3">
+        <div class="card p-3 text-center shadow">
+            <h5>💰 Descuentos</h5>
+            <a asp-controller="Discounts" asp-action="Index" class="btn btn-success mt-2">
+                Entrar
+            </a>
+        </div>
+    </div>
+
+    <!-- REPORTES -->
+    <div class="col-md-3">
+        <div class="card p-3 text-center shadow">
+            <h5>📊 Reportes</h5>
+            <a asp-controller="Reports" asp-action="Index" class="btn btn-danger mt-2">
+                Entrar
+            </a>
+        </div>
+    </div>
+
+</div>
+
+<!-- GRÁFICA -->
+<div class="mt-5">
+    <canvas id="ventasChart" height="100"></canvas>
+</div>
+
+@section Scripts {
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+
+    <script>
+   const dataFromServer = @Html.Raw(System.Text.Json.JsonSerializer.Serialize(ViewBag.Ventas ?? new List<object>()));
+
+        const labels = dataFromServer.map(x => "Mes " + x.mes);
+        const data = dataFromServer.map(x => x.total);
+
+        const ctx = document.getElementById('ventasChart');
+
+        new Chart(ctx, {
+            type: 'bar',
+            data: {
+                labels: labels,
+                datasets: [{
+                    label: 'Ventas reales',
+                    data: data,
+                    borderWidth: 1
+                }]
+            }
+        });
+    </script>
+}

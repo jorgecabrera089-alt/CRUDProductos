@@ -1,0 +1,27 @@
+﻿@model List<CRUDProductos.Models.Order>
+
+<h2>📦 Pedidos</h2>
+
+<table class="table">
+    <tr>
+        <th>Cliente</th>
+        <th>Dirección</th>
+        <th>Estado</th>
+        <th>Acciones</th>
+        <th>Productos</th>
+    </tr>
+
+    @foreach (var item in Model)
+    {
+        <tr>
+            <td>@item.Nombre</td>
+            <td>@item.Direccion</td>
+            <td>@item.Status</td>
+            <td>@item.Productos</td>
+            <td>
+                <a href="/Orders/EnCamino/@item.OrderId">En camino</a>
+                <a href="/Orders/Entregado/@item.OrderId">Entregado</a>
+            </td>
+        </tr>
+    }
+</table>

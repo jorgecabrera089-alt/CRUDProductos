@@ -2,19 +2,11 @@
 <input type="text" id="searchBox" class="form-control mb-4"
        placeholder="🔍 Buscar producto por nombre..." />
 <script>
-    function agregarAlCarrito(id, boton) {
-        fetch(`/Cart/Add/${id}`)
+    function agregarAlCarrito(id) {
+        fetch('/Cart/Add/' + id)
             .then(() => {
-                actualizarContador();
+                console.log("Agregado");
             });
-    }
-
-    function actualizarContador() {
-        let contador = document.getElementById("contadorCarrito");
-
-        let valor = parseInt(contador.innerText) || 0;
-
-        contador.innerText = valor + 1;
     }
 </script>
 
@@ -53,20 +45,23 @@
         <div class="col-md-4 mb-4 product-card">
             <div class="card shadow-lg">
 
-                <img src="@item.ImageUrl" class="card-img-top" style="height:200px; object-fit:cover;" />
+                <img src="@item.ImageUrl" class="img-fluid" style="height:150px; object-fit:cover;" />
 
                 <div class="card-body text-dark">
                     <h5 class="product-name">@item.Name</h5>
 
-                    <p>@item.Description</p>
+                    <p class="text-muted">@item.Description</p>
 
                     <p><strong>$@item.Price</strong></p>
+                    <p class="text-muted">
+                        Proveedor: @item.Supplier?.Name
+                    </p>
 
                     <a asp-action="Details" asp-route-id="@item.ProductId" class="btn btn-primary btn-sm">
                         Ver más
                     </a>
 
-                    <button onclick="agregarAlCarrito(@item.ProductId, this)" class="btn btn-success btn-sm">
+                    <button onclick="agregarAlCarrito(@item.ProductId)" class="btn btn-success btn-sm">
                         🛒 Agregar
                     </button>
                 </div>

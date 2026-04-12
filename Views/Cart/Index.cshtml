@@ -24,6 +24,12 @@
             </tr>
         }
     </tbody>
+    @if (!Model.Any())
+    {
+        <tr>
+            <td colspan="3">No hay productos en el carrito</td>
+        </tr>
+    }
 </table>
 
 <h4>Total: $@Model.Sum(p => p.Price)</h4>

@@ -1,0 +1,13 @@
+@model CRUDProductos.Models.Discount
+
+<h2>➕ Crear Descuento</h2>
+
+<form method="post">
+
+    <input asp-for="Code" class="form-control mb-2" placeholder="Código" />
+    <input asp-for="Description" class="form-control mb-2" placeholder="Descripción" />
+    <input asp-for="Percentage" class="form-control mb-2" placeholder="Porcentaje" />
+
+    <button class="btn btn-success">Guardar</button>
+
+</form>

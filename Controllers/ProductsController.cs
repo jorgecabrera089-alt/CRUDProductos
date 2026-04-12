@@ -1,5 +1,6 @@
-﻿using Microsoft.AspNetCore.Mvc;
-using CRUDProductos.Models;
+﻿using CRUDProductos.Models;
+using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
 using System.Linq;
 
 namespace CRUDProductos.Controllers
@@ -15,8 +16,20 @@ namespace CRUDProductos.Controllers
 
         public IActionResult Index()
         {
-            var productos = _context.Products.ToList();
-            return View(productos);
+            var role = HttpContext.Session.GetString("Role");
+
+            // 🔥 BLOQUEAR ADMIN Y VENDEDOR
+            if (role == "1")
+            {
+                return RedirectToAction("AdminPanel", "Admin");
+            }
+
+            if (role == "2")
+            {
+                return RedirectToAction("Index", "Orders");
+            }
+
+            return View(_context.Products.ToList());
         }
 
         public IActionResult Create()
@@ -71,10 +84,11 @@ namespace CRUDProductos.Controllers
 
         public IActionResult Details(int id)
         {
-            var producto = _context.Products.Find(id);
-            if (producto == null) return NotFound();
+            var product = _context.Products.Find(id);
 
-            return View(producto);
+            if (product == null) return NotFound();
+
+            return View(product);
         }
     }
 }

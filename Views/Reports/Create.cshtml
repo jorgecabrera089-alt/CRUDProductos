@@ -1,0 +1,34 @@
+﻿@{
+    ViewData["Title"] = "Crear Reporte";
+}
+
+<h2>📊 Crear Reporte</h2>
+
+<form asp-action="Create" method="post">
+
+    <div class="mb-3">
+        <label>Descripción</label>
+        <input type="text" name="descripcion" class="form-control" required />
+    </div>
+
+    <div class="mb-3">
+        <label>Total Ventas</label>
+        <input type="number" name="totalVentas" class="form-control" required />
+    </div>
+
+    <button type="submit" class="btn btn-success">
+        💾 Guardar
+    </button>
+
+    <a asp-action="Index" class="btn btn-secondary">
+        🔙 Volver
+    </a>
+
+</form>
+
+@if (ViewBag.Mensaje != null)
+{
+    <div class="alert alert-success mt-3">
+        @ViewBag.Mensaje
+    </div>
+}
