@@ -1,31 +1,41 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using CRUDProductos.Models;
-using System.Linq;
 
-public class SuppliersController : Controller
+namespace CRUDProductos.Controllers  // ← ¡Esto faltaba!
 {
-    private readonly SampleDbContext _context;
-
-    public SuppliersController(SampleDbContext context)
+    public class SuppliersController : Controller
     {
-        _context = context;
-    }
+        private readonly SampleDbContext _context;
 
-    public IActionResult Index()
-    {
-        return View(_context.Suppliers.ToList());
-    }
+        public SuppliersController(SampleDbContext context)
+        {
+            _context = context;
+        }
 
-    public IActionResult Create()
-    {
-        return View();
-    }
+        public IActionResult Index()
+        {
+            // 🔐 Validación de sesión
+            if (string.IsNullOrEmpty(HttpContext.Session.GetString("User")))
+                return RedirectToAction("Login", "Account");
 
-    [HttpPost]
-    public IActionResult Create(Supplier supplier)
-    {
-        _context.Suppliers.Add(supplier);
-        _context.SaveChanges();
-        return RedirectToAction("Index");
+            if (HttpContext.Session.GetString("Role") != "1")
+                return RedirectToAction("Login", "Account");
+
+            var suppliers = _context.Suppliers.ToList();
+            return View(suppliers);
+        }
+
+        public IActionResult Create()
+        {
+            return View();
+        }
+
+        [HttpPost]
+        public IActionResult Create(Supplier supplier)
+        {
+            _context.Suppliers.Add(supplier);
+            _context.SaveChanges();
+            return RedirectToAction("Index");
+        }
     }
 }

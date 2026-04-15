@@ -1,31 +1,41 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using CRUDProductos.Models;
-using System.Linq;
 
-public class DiscountsController : Controller
+namespace CRUDProductos.Controllers
 {
-    private readonly SampleDbContext _context;
-
-    public DiscountsController(SampleDbContext context)
+    public class DiscountsController : Controller
     {
-        _context = context;
-    }
+        private readonly SampleDbContext _context;
 
-    public IActionResult Index()
-    {
-        return View(_context.Discounts.ToList());
-    }
+        public DiscountsController(SampleDbContext context)
+        {
+            _context = context;
+        }
 
-    public IActionResult Create()
-    {
-        return View();
-    }
+        public IActionResult Index()
+        {
+            // 🔐 Validación de sesión
+            if (string.IsNullOrEmpty(HttpContext.Session.GetString("User")))
+                return RedirectToAction("Login", "Account");
 
-    [HttpPost]
-    public IActionResult Create(Discount discount)
-    {
-        _context.Discounts.Add(discount);
-        _context.SaveChanges();
-        return RedirectToAction("Index");
+            if (HttpContext.Session.GetString("Role") != "1")
+                return RedirectToAction("Login", "Account");
+
+            var discounts = _context.Discounts.ToList();
+            return View(discounts);
+        }
+
+        public IActionResult Create()
+        {
+            return View();
+        }
+
+        [HttpPost]
+        public IActionResult Create(Discount discount)
+        {
+            _context.Discounts.Add(discount);
+            _context.SaveChanges();
+            return RedirectToAction("Index");
+        }
     }
 }

@@ -1,0 +1,29 @@
+@model List<CRUDProductos.Models.Supplier>
+
+<h2>Proveedores</h2>
+
+<a href="/Suppliers/Create" class="btn btn-primary mb-3">+ Crear Proveedor</a>
+
+<table class="table">
+
+<table class="table">
+    <thead>
+        <tr>
+            <th>Nombre</th>
+            <th>Teléfono</th>
+            <th>Email</th>
+            <th>Dirección</th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var s in Model)
+        {
+            <tr>
+                <td>@s.Name</td>
+                <td>@s.Phone</td>
+                <td>@s.Email</td>
+                <td>@s.Address</td>
+            </tr>
+        }
+    </tbody>
+</table>

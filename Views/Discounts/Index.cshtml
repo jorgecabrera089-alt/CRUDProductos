@@ -1,0 +1,33 @@
+@model List<CRUDProductos.Models.Discount>
+
+<h2>Descuentos</h2>
+
+<a href="/Discounts/Create" class="btn btn-primary mb-3">+ Crear Descuento</a>
+
+<table class="table">
+
+<table class="table">
+    <thead>
+        <tr>
+            <th>Código</th>
+            <th>Descripción</th>
+            <th>Porcentaje</th>
+            <th>Desde</th>
+            <th>Hasta</th>
+            <th>Activo</th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var d in Model)
+        {
+            <tr>
+                <td>@d.Code</td>
+                <td>@d.Description</td>
+                <td>@d.Percentage%</td>
+                <td>@d.StartDate.ToShortDateString()</td>
+                <td>@d.EndDate.ToShortDateString()</td>
+                <td>@(d.IsActive ? "✅" : "❌")</td>
+            </tr>
+        }
+    </tbody>
+</table>

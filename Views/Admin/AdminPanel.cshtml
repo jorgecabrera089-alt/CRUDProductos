@@ -57,23 +57,50 @@
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 
     <script>
-   const dataFromServer = @Html.Raw(System.Text.Json.JsonSerializer.Serialize(ViewBag.Ventas ?? new List<object>()));
+        let ventasChart = null;
 
-        const labels = dataFromServer.map(x => "Mes " + x.mes);
-        const data = dataFromServer.map(x => x.total);
+        const meses = ["Ene","Feb","Mar","Abr","May","Jun","Jul","Ago","Sep","Oct","Nov","Dic"];
 
-        const ctx = document.getElementById('ventasChart');
+        async function cargarVentas() {
+            const response = await fetch('/Admin/GetVentas');
+            const data = await response.json();
 
-        new Chart(ctx, {
-            type: 'bar',
-            data: {
-                labels: labels,
-                datasets: [{
-                    label: 'Ventas reales',
-                    data: data,
-                    borderWidth: 1
-                }]
+            const labels = data.map(x => meses[x.mes - 1] + " " + x.anio);
+            const valores = data.map(x => x.total);
+
+            if (ventasChart) {
+                ventasChart.data.labels = labels;
+                ventasChart.data.datasets[0].data = valores;
+                ventasChart.update();
+            } else {
+                const ctx = document.getElementById('ventasChart');
+                ventasChart = new Chart(ctx, {
+                    type: 'bar',
+                    data: {
+                        labels: labels,
+                        datasets: [{
+                            label: 'Ventas reales',
+                            data: valores,
+                            backgroundColor: 'rgba(40, 167, 69, 0.6)',
+                            borderColor: 'rgba(40, 167, 69, 1)',
+                            borderWidth: 1
+                        }]
+                    },
+                    options: {
+                        responsive: true,
+                        plugins: {
+                            legend: { position: 'top' },
+                            title: {
+                                display: true,
+                                text: 'Ventas por Mes'
+                            }
+                        }
+                    }
+                });
             }
-        });
+        }
+
+        cargarVentas();
+        setInterval(cargarVentas, 5000);
     </script>
 }
